@@ -4,9 +4,16 @@
 #include "display.h"
 #include <LovyanGFX.hpp>
 
-extern lgfx::LGFX_Sprite canvas;
+// FSD 4.2: Double-buffered sprites in PSRAM
+extern lgfx::LGFX_Sprite canvas0;
+extern lgfx::LGFX_Sprite canvas1;
+extern lgfx::LGFX_Sprite *p_canvas;
+
+// Macro to keep old code working: 'canvas' now points to the active buffer
+#define canvas (*p_canvas)
 
 void widgets_init();
+void widgets_swap();
 
 // Design tokens used by widgets
 #define CARD_RAD 8

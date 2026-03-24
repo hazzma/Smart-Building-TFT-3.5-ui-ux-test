@@ -29,11 +29,16 @@ void Task_UI(void *pvParameters) {
         g_state.sensor.lux_avg = 400.0f + random(0, 50);
         data_unlock(g_state);
 
-        // Render full UI ke PSRAM sprite buffer
+        // 1. Render UI to the CURRENT inactive canvas
         screens_render(g_state, current_fps);
         
-        // Push sprite ke LCD via DMA
+        // 2. Perform the buffer swap and push the RENDERED buffer
+        // Note: LovyanGFX pushSprite will automatically wait for any 
+        // previous DMA transfer from the OTHER buffer to finish.
         canvas.pushSprite(0, 0);
+        
+        // 3. Swap to the other buffer for the next frame's drawing
+        widgets_swap();
         
         // FPS counter
         frames++;
@@ -44,7 +49,9 @@ void Task_UI(void *pvParameters) {
             Serial.printf("[UI] FPS: %d\n", current_fps);
         }
         
-        vTaskDelay(pdMS_TO_TICKS(1));
+        // Use vTaskDelay(0) or no delay if we want absolute MAX speed
+        // but 1ms delay is safer to avoid WDT triggers on Core 1 if other system tasks exist.
+        vTaskDelay(pdMS_TO_TICKS(1)); 
     }
 }
 

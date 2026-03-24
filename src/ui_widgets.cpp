@@ -1,17 +1,31 @@
 #include "ui_widgets.h"
 #include <stdio.h>
 
-lgfx::LGFX_Sprite canvas(&lcd);
+// ── Double Buffering Canvas ─────────────────────────────────────
+lgfx::LGFX_Sprite canvas0(&lcd);
+lgfx::LGFX_Sprite canvas1(&lcd);
+lgfx::LGFX_Sprite *p_canvas = &canvas0;
 
 void widgets_init() {
-    canvas.setColorDepth(16);
-    // PSRAM is available, so 480x320x16bit = 307KB
-    if (!canvas.createSprite(480, 320)) {
-        Serial.println("Failed to create sprite in PSRAM!");
+    // 480x320 @ 16bit = 307.2 KB per canvas (Total ~615 KB)
+    // PSRAM is available (8MB). LovyanGFX automatically tries PSRAM for large sprites.
+    
+    canvas0.setColorDepth(16);
+    if (!canvas0.createSprite(480, 320)) {
+        Serial.println("CRITICAL: Failed to create canvas0 in PSRAM!");
+    }
+    
+    canvas1.setColorDepth(16);
+    if (!canvas1.createSprite(480, 320)) {
+        Serial.println("CRITICAL: Failed to create canvas1 in PSRAM!");
     }
 }
 
-// Card and UI drawing helpers...
+void widgets_swap() {
+    p_canvas = (p_canvas == &canvas0) ? &canvas1 : &canvas0;
+}
+
+// ── Widget Drawing Helpers ─────────────────────────────────────
 void drawCardBase(int x, int y, int w, int h, uint16_t color) {
     canvas.fillRoundRect(x, y, w, h, 8, color);
     canvas.drawRoundRect(x, y, w, h, 8, canvas.color565(40, 50, 80)); 
