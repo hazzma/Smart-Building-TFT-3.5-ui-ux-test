@@ -2,75 +2,58 @@
 #include "ui_widgets.h"
 
 static ScreenState current_screen = SCREEN_DASHBOARD;
-static char time_buffer[10] = "12:34"; // Dummy NTP time
 
 void screens_init() {
     widgets_init();
 }
 
-void screens_set(ScreenState s) {
-    current_screen = s;
-}
+void render_dashboard(BuildingState& state, int fps) {
+    canvas.fillScreen(COLOR_BG_MAIN);
 
-void drawDashboard(BuildingState& state, int fps) {
-    // Fill background with subtle dark gradient (Premium feel)
-    for(int y = 0; y < 320; y++) {
-        uint16_t c = canvas.color565(5, 5 + y/40, 15 + y/20); 
-        canvas.drawFastHLine(0, y, 480, c);
-    }
-    
-    // Snapshot of current data using Mutex
-    data_lock(state);
-    SensorData s = state.sensor;
-    NetworkState n = state.net;
-    data_unlock(state);
-    
-    // 1. Notification Bar (y=0 to 28)
-    drawNotifBar(n.wifi_connected, s.sensor_error[0], n.firebase_ok, n.room_name, time_buffer);
-    
-    // 2. Temp Cards at the top (y=36)
-    drawTempCard(8,   36, 110, 80, "SENSOR 1", s.temp[0], s.sensor_error[0]);
-    drawTempCard(124, 36, 110, 80, "SENSOR 2", s.temp[1], s.sensor_error[1]);
-    drawTempCard(240, 36, 110, 80, "SENSOR 3", s.temp[2], s.sensor_error[2]);
-    drawTempCard(356, 36, 115, 80, "SENSOR 4", s.temp[3], s.sensor_error[3]);
-    
-    // Left side column (Target Temp, AC, Up/Down, Projector)
-    // Target Temp Box
-    canvas.fillRoundRect(8, 126, 226, 32, 6, COLOR_CARD_BG);
-    canvas.drawRoundRect(8, 126, 226, 32, 6, COLOR_ACCENT_SEC);
-    canvas.setTextColor(COLOR_TEXT_MAIN);
-    canvas.setFont(&fonts::Font2);
-    canvas.setTextDatum(middle_center);
-    char buf[32];
-    sprintf(buf, "Target Suhu: %.1f C", s.temp_target);
-    canvas.drawString(buf, 8 + 113, 126 + 16);
-    
-    // AC Toggle
-    drawToggleButton(8, 166, 226, 42, "AC MASTER", s.ac_on);
-    
-    // Temp Up / Down
-    drawUpDownButton(8,  216, 108, 42, "NAIK", true);
-    drawUpDownButton(126, 216, 108, 42, "TURUN", false);
-    
-    // Projector Option (Below Up/Down)
-    drawToggleButton(8, 266, 226, 42, "PROJECTOR", s.projector_on);
-    
-    // Right side column (Lights, Presence, Lux)
-    drawToggleButton(240, 126, 230, 42, "LIGHTS", s.light_on);
-    drawPresenceBadge(240, 176, 230, 42, s.human_presence);
-    drawLuxCard(240, 226, 230, 82, s.lux_avg); // expanded height to look filled
-    
-    // FPS in bottom left corner overlay
-    canvas.setTextColor(COLOR_TEXT_SEC);
-    canvas.setFont(&fonts::Font0); // Tiny font
-    canvas.setTextDatum(bottom_left);
-    char fpsBuf[16];
-    sprintf(fpsBuf, "FPS: %d", fps);
-    canvas.drawString(fpsBuf, 4, 316);
+    // ── Top Notification Bar (y:0-28) ────────────────────────────
+    drawNotifBar(state.net.wifi_connected, false, state.net.firebase_ok, state.net.room_name, "12:00");
+
+    // ── Row 1: Temperature Cards (y:32-117) ──────────────────────
+    // 4 cards, each 116px wide with 2px gap, total = 4*116 + 3*4 = 476px, start x=2
+    drawTempCard(2,   32, 116, 86, "Suhu 1", state.sensor.temp[0], state.sensor.sensor_error[0]);
+    drawTempCard(120, 32, 116, 86, "Suhu 2", state.sensor.temp[1], state.sensor.sensor_error[1]);
+    drawTempCard(238, 32, 116, 86, "Suhu 3", state.sensor.temp[2], state.sensor.sensor_error[2]);
+    drawTempCard(356, 32, 122, 86, "Suhu 4", state.sensor.temp[3], state.sensor.sensor_error[3]);
+
+    // ── Row 2: AC Control (y:122-175) ────────────────────────────
+    drawToggleButton(2, 122, 234, 54, "Air Conditioner", state.sensor.ac_on);
+    drawUpDownButton(240, 122, 114, 54, "Turunkan", false);
+    drawUpDownButton(358, 122, 120, 54, "Naikkan", true);
+
+    // ── Row 3: Projector + Presence (y:180-233) ──────────────────
+    drawToggleButton(2, 180, 234, 54, "Projector", state.sensor.projector_on);
+    drawPresenceBadge(240, 180, 238, 54, state.sensor.human_presence);
+
+    // ── Row 4: Light + Lux (y:238-291) ──────────────────────────
+    drawToggleButton(2, 238, 234, 54, "Lampu", state.sensor.light_on);
+    drawLuxCard(240, 238, 238, 54, state.sensor.lux_avg);
+
+    // ── FPS counter (y:295-319, fills bottom gap) ─────────────────
+    canvas.fillRect(0, 295, 480, 25, COLOR_CARD_BG);
+    canvas.drawFastHLine(0, 295, 480, canvas.color565(30, 40, 65));
+    canvas.setTextColor(canvas.color565(80, 100, 130));
+    canvas.setFont(&fonts::Font0);
+    canvas.setTextDatum(middle_left);
+    char fps_buf[64];
+    snprintf(fps_buf, sizeof(fps_buf), " FPS: %d  |  Smart Building v1.0", fps);
+    canvas.drawString(fps_buf, 4, 307);
 }
 
 void screens_render(BuildingState& state, int fps) {
-    if (current_screen == SCREEN_DASHBOARD) {
-        drawDashboard(state, fps);
+    switch (current_screen) {
+        case SCREEN_DASHBOARD:
+            render_dashboard(state, fps);
+            break;
+        default:
+            break;
     }
+}
+
+void screens_set(ScreenState s) {
+    current_screen = s;
 }

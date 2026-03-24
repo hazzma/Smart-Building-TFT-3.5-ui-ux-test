@@ -215,10 +215,15 @@ ESP32-S3 dual-core dimanfaatkan penuh dengan pembagian task sebagai berikut:
 
 | Task Name | Core | Priority | Stack | Fungsi |
 |---|---|---|---|---|
-| Task_UI | Core 1 | 3 (High) | 8KB | Render display, handle touch, animasi |
-| Task_Comms | Core 0 | 2 (Med) | 6KB | Polling data dari semua slave via RJ45 |
-| Task_Firebase | Core 0 | 1 (Low) | 8KB | Sync data ke Firebase Realtime DB |
-| Task_NTP | Core 0 | 1 (Low) | 4KB | Sinkronisasi waktu via NTP (jika WiFi aktif) |
+| `Task_UI` | Core 1 | **4 (Highest)** | 8KB | Render display full-time, target max FPS (~53 FPS). Loop: `screens_render` → `canvas.pushSprite` → `vTaskDelay(1)`. |
+| `Task_Net` | Core 0 | 1 (Low) | 4KB | Placeholder: polling slave, Firebase sync, WiFi reconnect. Gunakan `data_lock()`/`data_unlock()` saat akses `BuildingState`. |
+
+> **Catatan Performa (March 2026):**
+> - Bus Parallel 8-bit dikonfigurasi di **30 MHz** via `cfg.freq_write = 30000000`
+> - `bus_shared = false` saat mode display-only (tanpa touch aktif) → prioritas penuh ke I80 bus
+> - `vTaskDelay(1)` pada Task_UI memberikan yield minimal ke scheduler tanpa menurunkan FPS secara signifikan
+> - Hasil pengukuran aktual: **53 FPS** pada resolusi 480×320, direct PSRAM sprite DMA push
+
 
 ### 3.4 Data Flow Diagram
 

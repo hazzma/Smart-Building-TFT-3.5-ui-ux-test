@@ -1,4 +1,4 @@
-/* #include "ui_widgets.h"
+#include "ui_widgets.h"
 #include <stdio.h>
 
 lgfx::LGFX_Sprite canvas(&lcd);
@@ -11,36 +11,25 @@ void widgets_init() {
     }
 }
 
-// Function to draw a nice looking card base
+// Card and UI drawing helpers...
 void drawCardBase(int x, int y, int w, int h, uint16_t color) {
     canvas.fillRoundRect(x, y, w, h, 8, color);
-    // Draw subtle border for "glassmorphism" or premium feel
     canvas.drawRoundRect(x, y, w, h, 8, canvas.color565(40, 50, 80)); 
 }
 
 void drawTempCard(int x, int y, int w, int h, const char* label, float value, bool error) {
     drawCardBase(x, y, w, h, error ? COLOR_STAT_ERR : COLOR_CARD_BG);
-    
-    // Label
     canvas.setTextColor(COLOR_TEXT_SEC);
     canvas.setFont(&fonts::Font2);
     canvas.setTextDatum(top_center);
     canvas.drawString(label, x + w / 2, y + 8);
-    
-    // Value
     canvas.setTextColor(COLOR_TEXT_MAIN);
     canvas.setFont(&fonts::Font4); 
     canvas.setTextDatum(middle_center);
     char buf[16];
-    if (error) {
-        sprintf(buf, "ERR");
-    } else {
-        sprintf(buf, "%.1f", value);
-    }
-    // Offset slightly for the large font
+    if (error) sprintf(buf, "ERR");
+    else sprintf(buf, "%.1f", value);
     canvas.drawString(buf, x + w / 2, y + h / 2 + 5);
-    
-    // Unit
     if (!error) {
         canvas.setTextColor(COLOR_ACCENT_MAIN);
         canvas.setFont(&fonts::Font2);
@@ -50,17 +39,13 @@ void drawTempCard(int x, int y, int w, int h, const char* label, float value, bo
 }
 
 void drawToggleButton(int x, int y, int w, int h, const char* label, bool state) {
-    // Smooth transition simulation for background
     uint16_t bgColor = state ? COLOR_STAT_ON : COLOR_STAT_OFF;
     uint16_t accent = state ? canvas.color565(220, 255, 240) : COLOR_TEXT_SEC;
-    
     drawCardBase(x, y, w, h, bgColor);
-    
     canvas.setTextColor(accent);
     canvas.setFont(&fonts::Font2);
     canvas.setTextDatum(top_center);
     canvas.drawString(label, x + w / 2, y + 6);
-    
     canvas.setTextColor(COLOR_TEXT_MAIN);
     canvas.setFont(&fonts::Font2);
     canvas.setTextDatum(bottom_center);
@@ -69,12 +54,10 @@ void drawToggleButton(int x, int y, int w, int h, const char* label, bool state)
 
 void drawUpDownButton(int x, int y, int w, int h, const char* label, bool isUp) {
     drawCardBase(x, y, w, h, COLOR_CARD_BG);
-    
     canvas.setTextColor(COLOR_ACCENT_SEC);
     canvas.setFont(&fonts::Font4);
     canvas.setTextDatum(middle_center);
     canvas.drawString(isUp ? "^" : "v", x + w / 2, y + h / 2 - 5);
-    
     canvas.setTextColor(COLOR_TEXT_SEC);
     canvas.setFont(&fonts::Font2);
     canvas.setTextDatum(bottom_center);
@@ -83,15 +66,12 @@ void drawUpDownButton(int x, int y, int w, int h, const char* label, bool isUp) 
 
 void drawPresenceBadge(int x, int y, int w, int h, bool detected) {
     drawCardBase(x, y, w, h, COLOR_CARD_BG);
-    
     canvas.setTextColor(COLOR_TEXT_SEC);
     canvas.setFont(&fonts::Font2);
     canvas.setTextDatum(top_center);
     canvas.drawString("Presence", x + w / 2, y + 6);
-    
     uint16_t dotColor = detected ? COLOR_STAT_ON : COLOR_STAT_OFF;
     canvas.fillCircle(x + 20, y + h - 15, 6, dotColor);
-    
     canvas.setTextColor(detected ? COLOR_TEXT_MAIN : COLOR_TEXT_SEC);
     canvas.setTextDatum(middle_left);
     canvas.drawString(detected ? "Detected" : "Clear", x + 35, y + h - 15);
@@ -99,19 +79,16 @@ void drawPresenceBadge(int x, int y, int w, int h, bool detected) {
 
 void drawLuxCard(int x, int y, int w, int h, float lux) {
     drawCardBase(x, y, w, h, COLOR_CARD_BG);
-    
     canvas.setTextColor(COLOR_TEXT_SEC);
     canvas.setFont(&fonts::Font2);
     canvas.setTextDatum(top_center);
     canvas.drawString("Avg Lux", x + w / 2, y + 6);
-    
     canvas.setTextColor(COLOR_ACCENT_MAIN);
     canvas.setFont(&fonts::Font4);
     canvas.setTextDatum(middle_center);
     char buf[16];
     sprintf(buf, "%.0f", lux);
     canvas.drawString(buf, x + w / 2, y + h / 2 + 5);
-    
     canvas.setTextColor(COLOR_TEXT_SEC);
     canvas.setFont(&fonts::Font2);
     canvas.setTextDatum(bottom_center);
@@ -121,40 +98,26 @@ void drawLuxCard(int x, int y, int w, int h, float lux) {
 void drawNotifBar(bool wifi, bool err, bool firebase, const char* room_name, const char* time_str) {
     canvas.fillRect(0, 0, 480, 28, COLOR_CARD_BG);
     canvas.drawFastHLine(0, 28, 480, COLOR_ACCENT_MAIN);
-    
-    // Hamburger icon (3 lines)
     canvas.fillRect(10, 7, 20, 3, COLOR_ACCENT_MAIN);
     canvas.fillRect(10, 13, 20, 3, COLOR_ACCENT_MAIN);
     canvas.fillRect(10, 19, 20, 3, COLOR_ACCENT_MAIN);
-
-    // Room Name
     canvas.setTextColor(COLOR_TEXT_MAIN);
     canvas.setFont(&fonts::Font2);
     canvas.setTextDatum(middle_left);
     canvas.drawString(room_name, 45, 14);
-    
-    // Status Icons aligned right
     int rightX = 470;
-    
-    // Time
     canvas.setTextDatum(middle_right);
     canvas.setTextColor(COLOR_TEXT_MAIN);
     canvas.drawString(time_str, rightX, 14);
     rightX -= 55;
-    
-    // Firebase
     canvas.setTextColor(firebase ? COLOR_STAT_ON : COLOR_STAT_ERR);
     canvas.drawString("FB", rightX, 14);
     rightX -= 35;
-    
-    // Error warning
     if (err) {
         canvas.setTextColor(COLOR_STAT_WARN);
         canvas.drawString("WARN", rightX, 14);
         rightX -= 50;
     }
-    
-    // WiFi
     canvas.setTextColor(wifi ? COLOR_ACCENT_SEC : COLOR_STAT_ERR);
     canvas.drawString("WiFi", rightX, 14);
 }
