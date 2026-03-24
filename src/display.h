@@ -55,7 +55,7 @@ public:
             cfg.offset_x         = 0;
             cfg.offset_y         = 0;
             cfg.offset_rotation  = 0;
-            cfg.bus_shared       = false;
+            cfg.bus_shared       = false; // Optimized for Dedicated Display
             _panel_instance.config(cfg);
         }
 

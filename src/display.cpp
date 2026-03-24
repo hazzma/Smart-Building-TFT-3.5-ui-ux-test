@@ -1,4 +1,4 @@
-#include "display.h"
+/* #include "display.h"
 
 LGFX lcd;
 
@@ -16,3 +16,4 @@ void display_brightness(uint8_t val) {
     // (FSD tidak menyebutkan pin BL secara eksplisit di pinout 2.2)
     // Placeholder untuk driver backlight PWM
 }
+*/

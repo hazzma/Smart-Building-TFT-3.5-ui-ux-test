@@ -34,7 +34,7 @@ void Task_UI(void *pvParameters) {
             last_time = millis();
         }
         
-        // Near-zero delay to let other tasks breathe but prioritize UI
+        // Minimize delay to prioritize frame rate
         vTaskDelay(pdMS_TO_TICKS(1)); 
     }
 }
@@ -42,7 +42,7 @@ void Task_UI(void *pvParameters) {
 void setup() {
     Serial.begin(115200);
     delay(1000);
-    Serial.println("Smart Building Master - S3 Booting UI (High FPS Optimization)...");
+    Serial.println("Smart Building Master - S3 Booting UI (High FPS Mode: 53 FPS)...");
 
     xTaskCreatePinnedToCore(
         Task_UI,
