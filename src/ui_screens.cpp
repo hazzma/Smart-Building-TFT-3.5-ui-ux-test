@@ -393,6 +393,10 @@ void screens_set(ScreenState s) {
     canvas1.fillRect(0, 0, 480, 320, COLOR_BG_MAIN);
     
     Serial.printf("[UI] Screen Change: %d\n", (int)s);
+    
+    data_lock(g_state);
+    g_state.ui_needs_update = true;
+    data_unlock(g_state);
 }
 
 // Box Collision Helper

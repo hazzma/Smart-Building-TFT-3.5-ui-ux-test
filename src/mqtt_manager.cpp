@@ -36,6 +36,7 @@ static void mqtt_callback(char* topic, byte* payload, unsigned int length) {
         }
         g_state.sensor.lux = lux;
         g_state.sensor.co2 = co2;
+        g_state.last_data_ts = millis();
         g_state.ui_needs_update = true;
         data_unlock(g_state);
         

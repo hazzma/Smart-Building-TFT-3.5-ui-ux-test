@@ -25,8 +25,34 @@ The system is currently undergoing performance tuning to improve the frame rate:
 - **Conditional Rendering**: Implementing a "Dirty Flag" system to bypass redundant frame pushes when UI state is static.
 - **WiFi Scan Logic**: Implementing actual asynchronous network scanning to replace current UI placeholders.
 
-## 📋 Hardware Specification
+## 📋 Hardware Specification & Pinout
+
+### MCU & Core
 - **MCU**: ESP32-S3 (16MB Flash, 8MB PSRAM).
-- **Display**: 3.5" Parallel TFT (ILI9488).
-- **Touch**: Resistive 4-wire (Shared Pins with TFT Bus).
-- **Ethernet**: W5500 (SPI2).
+- **Architecture**: Dual-core RTOS (Core 0: Network, Core 1: UI).
+
+### Pin Mapping Table
+
+| Feature | Function | ESP32-S3 Pin | Notes |
+| :--- | :--- | :--- | :--- |
+| **TFT Parallel 8-bit** | D0 | 1 | |
+| | D1 | 2 | |
+| | D2 | 3 | |
+| | D3 | 4 | |
+| | D4 | 5 | |
+| | D5 | 6 | |
+| | **D6 / TOUCH_XP** | **7** | Shared with Touch |
+| | **D7 / TOUCH_YM** | **8** | Shared with Touch |
+| | **WR / TOUCH_YP** | **15** | Shared with Touch |
+| | **RS (DC) / TOUCH_XM**| **16** | Shared with Touch |
+| | CS | 17 | |
+| | RD | 14 | |
+| | RST | 48 | |
+| **Ethernet (W5500)** | CS | 10 | SPI2_HOST |
+| | MOSI | 11 | SPI2_HOST |
+| | SCK | 12 | SPI2_HOST |
+| | MISO | 13 | SPI2_HOST |
+| | RST | 18 | |
+
+---
+*Checkpoint 1.1 - Final Optimized State*

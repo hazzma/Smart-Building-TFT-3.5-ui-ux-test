@@ -45,6 +45,7 @@ struct BuildingState {
   int                 dashboard_page;  // 0 = Page 1, 1 = Page 2
   bool                use_dummy;       // true = gunakan data dummy
   bool                ui_needs_update; // Dirty flag untuk optimasi render
+  uint32_t            last_data_ts;    // Timestamp data terakhir masuk
   SemaphoreHandle_t   mutex;           // RTOS mutex untuk akses aman
 };
 

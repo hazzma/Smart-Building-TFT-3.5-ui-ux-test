@@ -5,7 +5,9 @@ BuildingState g_state;
 
 void data_init(BuildingState& state) {
     state.mutex = xSemaphoreCreateMutex();
-    state.use_dummy = true;
+    state.use_dummy = false; // Default to FALSE for real data
+    state.ui_needs_update = true;
+    state.last_data_ts = millis();
     data_load_dummy(state);
 }
 

@@ -18,7 +18,11 @@
 #define COLOR_STAT_WARN     0xFD20      // Orange vibrant
 
 
+#include <freertos/FreeRTOS.h>
+#include <freertos/semphr.h>
+
 extern TFT_eSPI tft;
+extern SemaphoreHandle_t bus_mutex;
 
 void display_init();
 void display_brightness(uint8_t val);
