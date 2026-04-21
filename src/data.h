@@ -8,7 +8,8 @@
 struct SensorData {
   float    temp[4];
   float    temp_target;
-  float    lux_avg;
+  float    lux;
+  int      co2;
   bool     ac_on;
   bool     projector_on;
   bool     light_on;
@@ -22,15 +23,29 @@ struct NetworkState {
   bool  wifi_connected;
   bool  lan_connected;
   bool  firebase_ok;
+  bool  mqtt_ok;
+  int   net_priority; // 0=WiFi, 1=LAN
+  bool  lan_use_dhcp;  // true = DHCP, false = Static
+  char  lan_ip[16];     // Current IP
+  char  connected_wifi_ssid[32]; // Connected SSID name
+  char  lan_static_ip[16];
+  char  lan_gateway[16];
+  char  lan_subnet[16];
+  char  time_str[16];   // Waktu dari NTP
   char  room_name[32];
   char  slave_name[2][32];
+  char  conn_status[32];
+  char  lan_status_detail[64]; // e.g., "DHCP OK", "Internet Access"
+  char  wifi_status_detail[64]; // e.g., "Connecting...", "Failed"
 };
 
 struct BuildingState {
   SensorData          sensor;
   NetworkState        net;
-  bool                use_dummy;
-  SemaphoreHandle_t   mutex;
+  int                 dashboard_page;  // 0 = Page 1, 1 = Page 2
+  bool                use_dummy;       // true = gunakan data dummy
+  bool                ui_needs_update; // Dirty flag untuk optimasi render
+  SemaphoreHandle_t   mutex;           // RTOS mutex untuk akses aman
 };
 
 extern BuildingState g_state;

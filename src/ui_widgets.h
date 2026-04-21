@@ -2,12 +2,11 @@
 #define UI_WIDGETS_H
 
 #include "display.h"
-#include <LovyanGFX.hpp>
 
-// FSD 4.2: Double-buffered sprites in PSRAM
-extern lgfx::LGFX_Sprite canvas0;
-extern lgfx::LGFX_Sprite canvas1;
-extern lgfx::LGFX_Sprite *p_canvas;
+// FSD 4.2: Double-buffered sprites in PSRAM (using TFT_eSPI)
+extern TFT_eSprite canvas0;
+extern TFT_eSprite canvas1;
+extern TFT_eSprite *p_canvas;
 
 // Macro to keep old code working: 'canvas' now points to the active buffer
 #define canvas (*p_canvas)
@@ -25,6 +24,7 @@ void drawToggleButton(int x, int y, int w, int h, const char* label, bool state)
 void drawUpDownButton(int x, int y, int w, int h, const char* label, bool isUp);
 void drawPresenceBadge(int x, int y, int w, int h, bool detected);
 void drawLuxCard(int x, int y, int w, int h, float lux);
-void drawNotifBar(bool wifi, bool err, bool firebase, const char* room_name, const char* time_str);
+void drawCO2Card(int x, int y, int w, int h, int co2);
+void drawNotifBar(bool wifi, bool lan, bool mqtt, const char* conn_status, const char* room_name, const char* time_str);
 
 #endif

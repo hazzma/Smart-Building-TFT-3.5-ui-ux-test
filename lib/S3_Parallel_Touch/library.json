@@ -1,0 +1,15 @@
+{
+  "name": "S3_Parallel_Touch",
+  "version": "1.0.0",
+  "description": "A lightweight library for 8-bit parallel resistive touch sensors on ESP32-S3 that share pins with the display data bus.",
+  "keywords": "esp32-s3, touch, parallel, tft, ili9488",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/REPLACE_WITH_YOUR_REPO"
+  },
+  "frameworks": "arduino",
+  "platforms": "espressif32",
+  "dependencies": {
+    "adafruit/Adafruit TouchScreen": "^1.1.6"
+  }
+}

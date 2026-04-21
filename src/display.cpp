@@ -1,18 +1,16 @@
 #include "display.h"
 
-LGFX lcd;
+TFT_eSPI tft = TFT_eSPI();
 
 void display_init() {
-    lcd.init();
-    lcd.setRotation(1); // Standard Landscape translation. DO NOT USE 0 for ILI9488 in landscape.
-    lcd.fillScreen(COLOR_BG_MAIN);
-    
-    // Inisialisasi DMA jika didukung (FSD 4.2)
-    lcd.initDMA();
+    tft.init();
+    tft.setRotation(1); // Landscape
+    tft.invertDisplay(false); // Panels differ, Bos's panel is Normal
+    tft.fillScreen(COLOR_BG_MAIN);
 }
 
+
+
 void display_brightness(uint8_t val) {
-    // Implementasi brightness jika pin BL tersedia
-    // (FSD tidak menyebutkan pin BL secara eksplisit di pinout 2.2)
-    // Placeholder untuk driver backlight PWM
+    // Backlight implementation
 }
