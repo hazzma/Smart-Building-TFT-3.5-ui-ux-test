@@ -2,6 +2,10 @@
 
 Smart Building Master unit based on **ESP32-S3 (N16R8)** with a **3.5" Parallel TFT Display**. This device serves as the central HMI for building control and monitoring.
 
+## 📄 Documentation
+- **Functional Specification Document (FSD)**: [FSD_Smart_Building_Master.md](docs/FSD_Smart_Building_Master.md)
+
+
 ## 🛠 Current Working Features (Checkpoint 1)
 - **TFT Display**: 480x320 Parallel 8-bit interface driven by `TFT_eSPI`.
 - **UI Architecture**: Double-buffered sprite system for flicker-free rendering.

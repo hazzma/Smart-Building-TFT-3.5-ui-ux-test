@@ -181,13 +181,13 @@ Master S3/
 │   ├── data.h / data.cpp    # Global state (BuildingState), Mutex
 │   ├── display.h / display.cpp  # TFT init, bus_mutex declaration
 │   ├── touch.h / touch.cpp  # Resistive touch (shared bus, ADC)
-│   ├── mqtt_manager.h / .cpp# MQTT pub/sub (SSL WiFi, non-SSL LAN)
-│   ├── wifi_manager.h / .cpp# WiFi connect/reconnect/scan
-│   ├── lan_manager.h / .cpp # W5500 Ethernet (DHCP/Static)
-│   ├── time_manager.h / .cpp# NTP synchronization
-│   ├── ui_screens.h / .cpp  # Screen rendering & navigation
-│   ├── ui_widgets.h / .cpp  # Widget library (cards, buttons)
-│   └── ui_keyboard.h / .cpp # Virtual QWERTY Keyboard
+│   ├── ui_screens.h / ui_screens.cpp  # Screen rendering & navigation
+│   ├── ui_widgets.h / ui_widgets.cpp  # Widget library (cards, buttons)
+│   ├── ui_keyboard.h / ui_keyboard.cpp # Virtual QWERTY Keyboard
+│   ├── wifi_manager.h / wifi_manager.cpp # WiFi connect/reconnect/scan
+│   ├── lan_manager.h / lan_manager.cpp   # W5500 Ethernet (DHCP/Static)
+│   ├── mqtt_manager.h / mqtt_manager.cpp # MQTT pub/sub (SSL WiFi, non-SSL LAN)
+│   └── time_manager.h / time_manager.cpp # NTP sync
 │
 ├── lib/
 │   └── S3_Parallel_Touch/   # Custom lib: resistive touch on shared bus
