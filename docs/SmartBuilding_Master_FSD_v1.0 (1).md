@@ -858,7 +858,7 @@ monitor_speed = 115200
 1. **Phase 1 (Sekarang):** Display + Touch + UI — tanpa slave hardware, data dummy aktif
 2. **Phase 2:** Integrasi `comms.cpp` dengan protokol slave yang dipilih (Modbus/CAN)
 3. **Phase 3:** Integrasi Firebase + Flutter app remote control
-4. **Phase 4:** OTA Update, production hardening, multi-room support
+4. **Phase 4:** Production hardening, multi-room support
 
 ---
 
