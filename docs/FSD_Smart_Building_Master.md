@@ -401,7 +401,6 @@ Access to TFT parallel bus (render + touch) SHALL be protected by `bus_mutex`.
 
 - [ ] **WiFi Scan Real Logic** — Implementasi async `WiFi.scanNetworks(true)`, populate hasil ke `g_state` untuk ditampilkan di `SCREEN_WIFI_SCAN`.
 - [ ] **Slave Communication** — Integrasi protokol Modbus/RS485 atau protokol custom via UART untuk komunikasi ke unit Slave.
-- [ ] **OTA (Over-The-Air)** — Update firmware via WiFi tanpa perlu kabel USB.
 - [ ] **Bus Overclocking** — Optimasi timing parallel bus TFT untuk meningkatkan FPS di atas 30.
 - [ ] **Firebase Sync** — Sinkronisasi state gedung ke Firebase Realtime Database.
 - [ ] **Screen: Slave Manager** — UI untuk monitoring dan kontrol unit-unit Slave terhubung.
